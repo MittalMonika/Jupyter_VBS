@@ -1,5 +1,5 @@
 boosthist:
-  - ./data/merged-histogram-rome-2016.pkl.gz
+  - merged-histogram-phcr_fn-2016.pkl.gz
 
 xsections:
   !include ./config/xsections_2018.yaml

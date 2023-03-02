@@ -116,8 +116,8 @@ class datagroup:
         for proc, _hist in self.histograms.items():
             # skip empty catgeories
             if self.channel not in _hist['hist'].axes['channel']:
-                #print(f'[WARNING] : {self.name}: {self.observable}: {self.channel} not present in axes. available channels:')
-                #print(list(_hist['hist'].axes['channel']))
+                print(f'[WARNING] : {self.name}: {self.observable}: {self.channel} not present in axes. available channels:')
+                print(list(_hist['hist'].axes['channel']))
                 continue
             
             bh_hist:hist.Hist = _hist['hist'][{

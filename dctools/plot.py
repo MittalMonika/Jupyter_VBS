@@ -43,22 +43,28 @@ mlp.rcParams['ytick.minor.width'  ] =  0.8    ## minor tick width in points
 mlp.rcParams['axes.prop_cycle'] = cycler(color=_plot_colors_)
 
 def add_process_axis(
-        histograms: dict[str, datagroup], 
-        axis_name: str = 'process',
-        flow: bool = True ) -> hist.Hist:
+        histograms, 
+        axis_name = 'process',
+        flow = True ) -> hist.Hist:
 
     storage = None
     histos = {}
+    print(histograms.items())
     for it, (n, p) in enumerate(histograms.items()):
+        print(type(p))
         _h = p.to_boost()
+        print(_h.shape)
         if len(_h.shape) == 0:
             continue
+        print("monika i am here")    
         histos[n] = _h
+        
         if it == 0:
             axes = [axis for axis in p.to_boost().axes]
             storage = p.to_boost()._storage_type()
             
     iterator = histos.keys()
+    print("monika",histos.keys())
     new_axis = hist.axis.StrCategory(iterator, name=axis_name, label=axis_name)
     axes.insert(0, new_axis)
     new_hist = hist.hist.Hist(
@@ -78,7 +84,7 @@ def add_process_axis(
         
     return new_hist
 
-def make_split(ratio: float, gap: float = 0., ptype: str ="step") -> Any:
+def make_split(ratio, gap, ptype ="step"):
     from matplotlib.gridspec import GridSpec
     cax = plt.gca()
     box = cax.get_position()
@@ -98,14 +104,14 @@ def make_split(ratio: float, gap: float = 0., ptype: str ="step") -> Any:
     return ax, bx
 
 def mcplot(
-    pred: List[hist.Hist] | hist.Hist, # either a list of MC or a boost hist with sample axis
-    data: List[hist.Hist] | hist.Hist = None, 
-    syst: List[hist.Hist] | hist.Hist = None, 
-    proc_axis_name: str = 'process', 
-    syst_axis_name: str = 'systematic', 
-    **kwargs) -> Any:
+    pred, # either a list of MC or a boost hist with sample axis
+    data = None, 
+    syst = None, 
+    proc_axis_name = 'process', 
+    syst_axis_name = 'systematic', 
+    **kwargs):
     # inspired from boost Hist
-    ax, bx = make_split(0.7)
+    ax, bx = make_split(0.7,0.)
     
     x_vals = None
     l_edge = None
@@ -247,13 +253,13 @@ def mcplot(
 
 
 def check_systematic(
-    pred: List[hist.Hist] | hist.Hist | hist.Stack, # either a list of MC or a boost hist with sample axis
-    syst: List[hist.Hist] | hist.Hist | hist.Stack = None, 
-    syst_axis_name: str = 'systematic',
-    plot_file_name: str = 'check-sys',
-    output_dir: str = './systematic-check/',
-    xrange: List = [],
-    **kwargs) -> Any:
+    pred , # either a list of MC or a boost hist with sample axis
+    syst = None, 
+    syst_axis_name = 'systematic',
+    plot_file_name = 'check-sys',
+    output_dir = './systematic-check/',
+    xrange = [],
+    **kwargs):
     # inspired from boost Hist
     
     if not os.path.isdir(os.path.dirname(output_dir)):
@@ -283,7 +289,7 @@ def check_systematic(
             
             # drawing the plots
             fig = plt.figure(figsize=(6,7))
-            ax, bx = make_split(0.7)
+            ax, bx = make_split(0.7,0.)
             
             ax.set_title(f'{plot_file_name} : {s}')
             pred.plot(ax=ax, color='black', histtype='step', label='nominal')
